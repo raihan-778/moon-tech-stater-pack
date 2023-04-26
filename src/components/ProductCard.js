@@ -1,11 +1,16 @@
 import React from "react";
 import { BiListPlus } from "react-icons/bi";
 import { useDispatch } from "react-redux";
-
-import addToCart from "../redux/reducers/actionCreators/actionCreators";
+import { FcDeleteDatabase } from "react-icons/fc";
+import {
+  addToCart,
+  removeFromCart,
+} from "../redux/reducers/actionCreators/actionCreators";
+import { useLocation } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
 
   return (
     <div
@@ -29,18 +34,30 @@ const ProductCard = ({ product }) => {
         </ul>
       </div>
       <div className="flex gap-2 mt-5">
-        <button
-          onClick={() => dispatch(addToCart(product))}
-          className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
-        >
-          Add to cart
-        </button>
-        <button
-          title="Add to wishlist"
-          className="bg-indigo-500  py-1 px-2 rounded-full"
-        >
-          <BiListPlus className="text-white" />
-        </button>
+        {!pathname.includes("cart") && (
+          <>
+            <button
+              onClick={() => dispatch(addToCart(product))}
+              className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
+            >
+              Add to cart
+            </button>
+            <button
+              title="Add to wishlist"
+              className="bg-indigo-500  py-1 px-2 rounded-full"
+            >
+              <BiListPlus className="text-white" />
+            </button>
+          </>
+        )}
+        {pathname.includes("cart") && (
+          <button>
+            <FcDeleteDatabase
+              onClick={() => dispatch(removeFromCart(product))}
+              className="bg-indigo-500 rounded-full px-1 flex-1 text-white text-bold text-3xl"
+            />
+          </button>
+        )}
       </div>
     </div>
   );
