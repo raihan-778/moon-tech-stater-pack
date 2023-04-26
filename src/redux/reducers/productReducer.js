@@ -7,19 +7,22 @@ const productReducer = (state = initialState, action) => {
   const selectedProduct = state.cart.find(
     (product) => product._id === action.payload._id
   );
-  const newCart = state.cart.filter(
-    (product) => product._id !== selectedProduct._id
-  );
+
   console.log(action.payload);
   console.log(selectedProduct);
 
   switch (action.type) {
     case ADD_TO_CART:
       if (selectedProduct) {
-        return [
-          newCart,
-          (selectedProduct.quantity = selectedProduct.quantity + 1),
-        ];
+        const newCart = state.cart.filter(
+          (product) => product._id !== selectedProduct._id
+        );
+        selectedProduct.quantity = selectedProduct.quantity + 1;
+
+        return {
+          ...state,
+          cart: [state.newCart, selectedProduct],
+        };
       }
       return {
         ...state,
